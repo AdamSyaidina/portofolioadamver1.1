@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="Contact Muhammad Adam Syaidina">
+    <title>Contact | Adam Syaidina</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-big">as</span>
+            <div class="logo-text">
+                <span>Adam</span>
+                <span>Syaidina</span>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li onclick="location.href='index.html'">Home</li>
+            <li onclick="location.href='about.html'">About Me</li>
+            <li onclick="location.href='projects.html'">Projects</li>
+            <li onclick="location.href='experience.html'">Experience</li>
+            <li onclick="location.href='skill.html'">Skill</li>
+            <li class="active" onclick="location.href='contact.html'">Contact</li>
+        </ul>
+    </nav>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-page">
+        <div class="contact-head">
+            <p class="contact-tag">Let’s connect</p>
+            <h1>Contact</h1>
+            <p class="contact-intro">
+                Kalau ingin berdiskusi, berkolaborasi, atau sekadar menyapa, kamu bisa
+                menghubungi saya lewat informasi berikut atau langsung kirim pesan melalui form.
+            </p>
+        </div>
+
+        <div class="contact-layout">
+
+            <!-- LEFT -->
+            <div class="contact-info-card">
+                <h2>Contact Information</h2>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">Surel</span>
+                    <a href="mailto:adamuhammad1725@gmail.com">adamuhammad1725@gmail.com</a>
+                </div>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">Telepon</span>
+                    <a href="tel:+6283857324348">+62 838 5732 4348</a>
+                </div>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">LinkedIn</span>
+                    <a href="https://www.linkedin.com/" target="_blank">Muhammad Adam Syaidina</a>
+                </div>
+
+                <div class="contact-note">
+                    <p>
+                        Biasanya saya lebih cepat merespons melalui WhatsApp, silakan gunakan nomor telepon yang tertera. Untuk pesan formal
+                        atau kolaborasi, kamu bisa langsung gunakan form di samping.
+                    </p>
+                </div>
+            </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrapper">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+            <!-- RIGHT -->
+            <div class="contact-form-card">
+                <h2>Send a Message</h2>
+
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <input type="text" id="name" name="name" placeholder="Nama kamu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="emailkamu@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subjek</label>
+                        <input type="text" id="subject" name="subject" placeholder="Tujuan pesan" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Pesan</label>
+                        <textarea id="message" name="message" rows="6" placeholder="Tulis pesan kamu di sini..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CANNT CHARACTER -->
+    <div class="cannt-wrapper" onclick="toggleChat()">
+        <img src="static/images/cannt.png" alt="Cannt">
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="chat-container" id="chatBox">
+        <div class="chat-header">
+            <span>Cannt</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+
+        <div class="chat-content" id="chatContent"></div>
+
+        <div class="chat-input">
+            <input type="text" id="question" placeholder="Tanya tentang Adam...">
+            <button onclick="askAI()">Kirim</button>
+        </div>
+    </div>
+
+<script>
+let hasShownWelcome = false;
+
+function toggleChat() {
+    const chat = document.getElementById("chatBox");
+    const cannt = document.querySelector(".cannt-wrapper");
+    const chatContent = document.getElementById("chatContent");
+
+    if (chat.style.display === "flex") {
+        chat.style.display = "none";
+        cannt.style.display = "block";
+    } else {
+        chat.style.display = "flex";
+        cannt.style.display = "none";
+
+        if (!hasShownWelcome) {
+            addChatMessage(
+                "Halo! Saya <strong>Cannt</strong>, asisten portfolio Adam 😊<br>" +
+                "Saya bisa menjawab beberapa pertanyaan umum tentang Adam."
+            );
+            hasShownWelcome = true;
+        }
+    }
+}
+
+function addChatMessage(content, type = "ai-msg") {
+    const chatContent = document.getElementById("chatContent");
+    const message = document.createElement("div");
+    message.className = type;
+    message.innerHTML = content;
+    chatContent.appendChild(message);
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+function escapeHTML(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function getCanntAnswer(question) {
+    const q = question.toLowerCase();
+
+    if (/(halo|hai|hi|hello|pagi|siang|sore|malam)/.test(q))
+        return "Halo! Saya Cannt, asisten portfolio Adam 😊 Ada yang ingin kamu ketahui tentang Adam?";
+
+    if (/(nama|siapa adam|tentang adam|who is adam)/.test(q))
+        return "Adam adalah Muhammad Adam Syaidina, mahasiswa S1 Teknik Telekomunikasi di Telkom University Purwokerto.";
+
+    if (/(kuliah|pendidikan|kampus|universitas|jurusan|semester)/.test(q))
+        return "Adam menempuh S1 Teknik Telekomunikasi di Telkom University Purwokerto.";
+
+    if (/(skill|keahlian|bisa apa|kemampuan|teknologi)/.test(q))
+        return "Adam memiliki pengalaman pada Python, MATLAB, GNU Radio, RTL-SDR, IoT, elektronika, fiber optic, AutoCAD, dan beberapa teknologi telekomunikasi.";
+
+    if (/(project|proyek|karya)/.test(q))
+        return "Kamu bisa melihat beberapa proyek Adam di halaman Projects, termasuk proyek IoT, telekomunikasi, dan pengembangan teknologi.";
+
+    if (/(pengalaman|organisasi|kerja)/.test(q))
+        return "Adam memiliki pengalaman organisasi dan akademik, termasuk kegiatan himpunan, asisten praktikum, grup riset, serta pengalaman sebagai teknisi fiber optic.";
+
+    if (/(telkom|fiber|optik|ftth|jointer)/.test(q))
+        return "Adam memiliki pengalaman sebagai teknisi lapangan/jointer dengan fokus pada instalasi dan troubleshooting fiber optic.";
+
+    if (/(iot|internet of things)/.test(q))
+        return "IoT merupakan salah satu bidang yang diminati Adam, bersama web development, machine learning, dan teknologi telekomunikasi.";
+
+    if (/(kontak|contact|email|hubungi)/.test(q))
+        return "Kamu bisa menghubungi Adam melalui informasi kontak yang tersedia di halaman Contact.";
+
+    return "Saya versi statis dari Cannt, jadi belum bisa memahami pertanyaan bebas seperti AI. Coba tanyakan tentang pendidikan, skill, project, pengalaman, IoT, fiber optic, atau kontak Adam 😊";
+}
+
+function askAI() {
+    const input = document.getElementById("question");
+    const question = input.value.trim();
+    if (!question) return;
+
+    addChatMessage(escapeHTML(question), "user-msg");
+    input.value = "";
+
+    const typingId = "typing-" + Date.now();
+    const chatContent = document.getElementById("chatContent");
+    const typing = document.createElement("div");
+    typing.className = "ai-msg typing";
+    typing.id = typingId;
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    chatContent.appendChild(typing);
+    chatContent.scrollTop = chatContent.scrollHeight;
+
+    setTimeout(() => {
+        const el = document.getElementById(typingId);
+        if (!el) return;
+        el.classList.remove("typing");
+        el.innerHTML = getCanntAnswer(question);
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }, 500);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("question");
+    if (input) {
+        input.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                askAI();
+            }
+        });
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("contactForm");
+    if (!form) return;
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        if (!name || !email || !subject || !message) return;
+
+        const body =
+            "Nama: " + name + "\n" +
+            "Email: " + email + "\n\n" +
+            "Pesan:\n" + message;
+
+        const mailto =
+            "mailto:adamuhammad1725@gmail.com" +
+            "?subject=" + encodeURIComponent("[Portfolio Contact] " + subject) +
+            "&body=" + encodeURIComponent(body);
+
+        window.location.href = mailto;
+    });
+});
+</script>
+
+</body>
+</html>
